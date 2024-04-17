@@ -1,0 +1,137 @@
+import React, { useState } from 'react';
+import './App.css';
+
+function App() {
+  const [items, setItems] = useState([
+    { id: 1, name: 'Apple', type: 'fruit' },
+    { id: 2, name: 'Broccoli', type: 'vegetable' },
+    { id: 3, name: 'Mushroom', type: 'vegetable' },
+    { id: 4, name: 'Banana', type: 'fruit' },
+    { id: 5, name: 'Tomato', type: 'vegetable' },
+    { id: 6, name: 'Orange', type: 'fruit' },
+    { id: 7, name: 'Mango', type: 'fruit' },
+    { id: 8, name: 'Pineapple', type: 'fruit' },
+    { id: 9, name: 'Cucumber', type: 'vegetable' },
+    { id: 10, name: 'Watermelon', type: 'fruit' },
+    { id: 11, name: 'Carrot', type: 'vegetable' }
+  ]);
+
+  const [fruits, setFruits] = useState([]);
+  const [vegetables, setVegetables] = useState([]);
+
+  const moveItem = (itemId, type) => {
+    const itemToMove = items.find(item => item.id === itemId);
+    if (type === 'fruit') {
+      setFruits(prevFruits => [...prevFruits, itemToMove]);
+    } else {
+      setVegetables(prevVegetables => [...prevVegetables, itemToMove]);
+    }
+    setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+  };
+
+  const handleColumnClick = (type, clickedItemId) => {
+    const itemsToMoveBack = type === 'fruit' ? fruits : vegetables;
+    setItems(prevItems => [...prevItems, ...itemsToMoveBack.filter(item => item.id === clickedItemId)]);
+    if (type === 'fruit') {
+      setFruits(prevFruits => prevFruits.filter(item => item.id !== clickedItemId));
+    } else {
+      setVegetables(prevVegetables => prevVegetables.filter(item => item.id !== clickedItemId));
+    }
+  };
+
+  return (
+    <div className="container">
+      <div className="column" id="items">
+        {items.map(item => (
+          <div className="item STyl" key={item.id} onClick={() => moveItem(item.id, item.type)}>
+            {item.name}
+          </div>
+        ))}
+      </div>
+      <div className="column" id="fruits" onClick={() => handleColumnClick('fruit', fruits[0]?.id)}>
+        <div class="Fru">fruits</div>
+        {fruits.map(fruit => (
+          <div className="item STyl" key={fruit.id}>
+            {fruit.name}
+          </div>
+        ))}
+      </div>
+
+      <div className="column" id="vegetables" onClick={() => handleColumnClick('vegetable', vegetables[0]?.id)}>
+        <div class="Vege">vegetables</div>
+        {vegetables.map(vegetable => (
+          <div className="item STyl" key={vegetable.id} >
+            {vegetable.name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+}
+
+export default App;
+
+
+//App.css
+.container {
+  display: flex;
+  height: 100%;
+  max-height: none;
+}
+
+.column {
+  flex: 1;
+  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  height: 100%;
+  max-height: none;
+}
+
+.item {
+  background-color: #f0f0f0;
+  border: 1px solid #aaa;
+  padding: 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+
+#root {
+  width: 100%;
+  height: 90vh;
+}
+
+.Vege {
+
+  font-family: system-ui;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px;
+  background-color: #dddddd;
+  margin-bottom: 10px;
+
+}
+
+.Fru {
+
+  font-family: system-ui;
+  font-weight: 700;
+  text-align: center;
+  padding: 20px;
+  background-color: #dddddd;
+  margin-bottom: 10px;
+
+}
+
+.STyl {
+  text-align: center;
+  background-color: white;
+  border: 1px solid #eddede;
+  font-family: system-ui;
+  font-weight: 700;
+  padding: 10px;
+  cursor: pointer;
+}
