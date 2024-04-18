@@ -21,13 +21,25 @@ function App() {
 
   const moveItem = (itemId, type) => {
     const itemToMove = items.find(item => item.id === itemId);
+
     if (type === 'fruit') {
       setFruits(prevFruits => [...prevFruits, itemToMove]);
     } else {
       setVegetables(prevVegetables => [...prevVegetables, itemToMove]);
     }
+
     setItems(prevItems => prevItems.filter(item => item.id !== itemId));
+
+    setTimeout(() => {
+      if (type === 'fruit') {
+        setFruits(prevFruits => prevFruits.filter(item => item.id !== itemId));
+      } else {
+        setVegetables(prevVegetables => prevVegetables.filter(item => item.id !== itemId));
+      }
+      setItems(prevItems => [...prevItems, itemToMove]);
+    }, 5000);
   };
+
 
   const handleColumnClick = (type, clickedItemId) => {
     const itemsToMoveBack = type === 'fruit' ? fruits : vegetables;
@@ -42,12 +54,15 @@ function App() {
   return (
     <div className="container">
       <div className="column" id="items">
-        {items.map(item => (
-          <div className="item STyl" key={item.id} onClick={() => moveItem(item.id, item.type)}>
-            {item.name}
-          </div>
-        ))}
+        {items
+          .filter((item, index, self) => self.findIndex(t => t.id === item.id) === index)
+          .map(item => (
+            <div className="item STyl" key={item.id} onClick={() => moveItem(item.id, item.type)}>
+              {item.name}
+            </div>
+          ))}
       </div>
+
       <div className="column" id="fruits" onClick={() => handleColumnClick('fruit', fruits[0]?.id)}>
         <div class="Fru">fruits</div>
         {fruits.map(fruit => (
